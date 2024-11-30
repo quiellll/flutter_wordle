@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show ByteData, rootBundle;
 import 'dart:convert';
 import 'dart:math';
+import 'dart:async';
 
 import 'package:flutter_wordle/models/models.dart';
 
@@ -10,6 +11,7 @@ import 'package:flutter_wordle/models/models.dart';
 class ValidationProvider extends ChangeNotifier {
 
    String validationMessage = '';
+  Timer? _validationMessageTimer;
 
   final Language language;
   String currentInput = '';
@@ -110,19 +112,18 @@ class ValidationProvider extends ChangeNotifier {
 
   ValidationResult submitAttempt() {
 
+     _validationMessageTimer?.cancel();
     validationMessage = '';
 
     if (currentInput.length != 5) {
-      validationMessage = 'Por favor ingresa una palabra de 5 letras';
-      notifyListeners();
+     _setTemporaryMessage('Por favor ingresa una palabra de 5 letras');
       return ValidationResult.invalid;
     }
 
    
 
     if (!wordList.contains(currentInput)) {
-      validationMessage = 'La palabra no está en la lista';
-      notifyListeners();
+      _setTemporaryMessage('La palabra no está en la lista');
       return ValidationResult.notInWordList;
     }
 
@@ -185,4 +186,23 @@ class ValidationProvider extends ChangeNotifier {
     notifyListeners();
     return ValidationResult.continue_;
   }
+
+  void _setTemporaryMessage(String message) {
+    validationMessage = message;
+    notifyListeners();
+
+    // Set a timer to clear the message after 3 seconds
+    _validationMessageTimer = Timer(Duration(seconds: 3), () {
+      validationMessage = '';
+      notifyListeners();
+    });
+  }
+
+  // Don't forget to cancel the timer when the provider is disposed
+  @override
+  void dispose() {
+    _validationMessageTimer?.cancel();
+    super.dispose();
+  }
+
 }
