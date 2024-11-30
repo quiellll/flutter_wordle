@@ -2,10 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show ByteData, rootBundle;
 import 'dart:convert';
 import 'dart:math';
+import 'dart:async';
 
 import 'package:flutter_wordle/models/models.dart';
 
+
+
 class ValidationProvider extends ChangeNotifier {
+
+   String validationMessage = '';
+  Timer? _validationMessageTimer;
+
   final Language language;
   String currentInput = '';
   String answer = '';
@@ -14,6 +21,7 @@ class ValidationProvider extends ChangeNotifier {
   List<List<TileState>> tileStates = [];
   bool gameEnded = false;
   List<String> wordList = [];
+
 
   ValidationProvider({required this.language}) {
     _initializeGame();
@@ -100,7 +108,21 @@ class ValidationProvider extends ChangeNotifier {
   }
 
   ValidationResult submitAttempt() {
-    if (currentInput.length != 5) return ValidationResult.invalid;
+
+     _validationMessageTimer?.cancel();
+    validationMessage = '';
+
+    if (currentInput.length != 5) {
+     _setTemporaryMessage('Por favor ingresa una palabra de 5 letras');
+      return ValidationResult.invalid;
+    }
+
+   
+
+    if (!wordList.contains(currentInput)) {
+      _setTemporaryMessage('La palabra no está en la lista');
+      return ValidationResult.notInWordList;
+    }
 
     // Add current attempt to the list
     attempts.add(currentInput);
@@ -114,7 +136,7 @@ class ValidationProvider extends ChangeNotifier {
       letterCounts[c] = (letterCounts[c] ?? 0) + 1;
     }
 
-    // First pass: mark correct positions
+     // First pass: mark correct positions
     for (int i = 0; i < currentInput.length; i++) {
       if (currentInput[i] == answer[i]) {
         currentTileStates[i] = TileState.correct;
@@ -161,4 +183,23 @@ class ValidationProvider extends ChangeNotifier {
     notifyListeners();
     return ValidationResult.continue_;
   }
+
+  void _setTemporaryMessage(String message) {
+    validationMessage = message;
+    notifyListeners();
+
+    // Set a timer to clear the message after 3 seconds
+    _validationMessageTimer = Timer(Duration(seconds: 3), () {
+      validationMessage = '';
+      notifyListeners();
+    });
+  }
+
+  // Don't forget to cancel the timer when the provider is disposed
+  @override
+  void dispose() {
+    _validationMessageTimer?.cancel();
+    super.dispose();
+  }
+
 }
