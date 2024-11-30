@@ -1,7 +1,7 @@
 /// JUEGO PRINCIPAL ///
 √ Añadir listas de palabras
 √ Selección de palabras a partir de lista
-- Comprobación de palabras en función de la lista
+√ Comprobación de palabras en función de la lista
 
 /// FUNCIONALIDADES ///
 √ Toggle modo oscuro en pantalla de juego 
@@ -13,3 +13,6 @@
 - Añadir sonidos
 - Añadir animaciones
 √ Mejorar diseño UI
+- Botón de reiniciar (como el chino)
+- Tutorial? (todos sabemos jugar)
+- Lista en inglés más extensa
