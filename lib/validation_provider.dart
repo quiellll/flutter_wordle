@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show ByteData, rootBundle;
+import 'dart:convert';
+import 'dart:math';
 import 'package:flutter_wordle/models.dart';
 
 class ValidationProvider extends ChangeNotifier {
@@ -9,12 +12,64 @@ class ValidationProvider extends ChangeNotifier {
   Map<String, KeyState> keyStates = {};
   List<List<TileState>> tileStates = [];
   bool gameEnded = false;
+  List<String> wordList = [];
 
   ValidationProvider({required this.language}) {
+    _initializeGame();
+  }
+
+  Future<void> _initializeGame() async {
+    // Initialize key and tile states
     _initializeKeyStates();
     _initializeTileStates();
-    // TODO: Set initial answer based on language
-    answer = 'WORLD'; // Temporary
+
+    // Load word list based on language
+    await _loadWordList();
+
+    // Select random answer
+    _selectRandomAnswer();
+  }
+
+  Future<void> _loadWordList() async {
+    try {
+      // Determine the correct file path based on language
+      String filePath = language == Language.english 
+          ? 'assets/words_english.txt' 
+          : 'assets/words_spanish.txt';
+
+      // Explicitly initialize ByteData
+      ByteData data = await rootBundle.load(filePath);
+
+      // Convert ByteData to String using UTF-8 decoding
+      String fileContent = utf8.decode(data.buffer.asUint8List());
+
+      // Split the content into lines and convert to uppercase
+      wordList = fileContent.split('\n')
+          .map((word) => word.trim().toUpperCase())
+          .where((word) => word.length == 5) // Ensure 5-letter words
+          .toList();
+
+      if (wordList.isEmpty) {
+        throw Exception('No words found in the file');
+      }
+
+      print('Loaded ${wordList.length} words');
+    } catch (e) {
+      // Fallback to a default list if file reading fails
+      wordList = language == Language.english 
+          ? ['WORLD', 'APPLE', 'SMILE', 'DANCE', 'HAPPY']
+          : ['MUNDO', 'PERRO', 'GATOS', 'MESAS', 'AGUAS'];
+      print('Error loading word list: $e');
+    }
+  }
+
+  void _selectRandomAnswer() {
+    final Random random = Random();
+    
+    // Randomly select an answer from the word list
+    answer = wordList[random.nextInt(wordList.length)];
+    print('Selected answer: $answer');
+    notifyListeners();
   }
 
   void _initializeKeyStates() {
@@ -32,7 +87,6 @@ class ValidationProvider extends ChangeNotifier {
       (_) => List.generate(5, (_) => TileState.empty),
     );
   }
-
   void addLetter(String letter) {
     if (currentInput.length < 5 && !gameEnded) {
       currentInput += letter;
