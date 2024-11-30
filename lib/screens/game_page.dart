@@ -7,10 +7,12 @@ import '../widgets/theme/theme_toggle.dart';
 
 class GamePage extends StatefulWidget {
   final Language language;
+  final Function(bool won, int attemts)? onGameComplete;
 
   const GamePage({
     super.key,
     required this.language,
+    this.onGameComplete,
   });
 
   @override
@@ -66,8 +68,12 @@ class _GamePageState extends State<GamePage> {
     final result = provider.submitAttempt();
     if (result == ValidationResult.win) {
       _showGameEndDialog(true);
+      // Call the callback with game results
+      widget.onGameComplete?.call(true, provider.attempts.length);
     } else if (provider.gameEnded) {
       _showGameEndDialog(false);
+      // Call the callback with game results
+      widget.onGameComplete?.call(false, 6); // Max attempts reached
     }
   }
 

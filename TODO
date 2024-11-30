@@ -5,9 +5,9 @@
 
 /// FUNCIONALIDADES ///
 √ Toggle modo oscuro en pantalla de juego 
-- Ajustar colores modo oscuro para que el teclado siga siendo visible
-- Actualizar estadísicas de juego tras cada partida
-- Comprobar veracidad de estadísticas
+√ Ajustar colores modo oscuro para que el teclado siga siendo visible
+√ Actualizar estadísicas de juego tras cada partida
+√ Comprobar veracidad de estadísticas
 
 /// EXTRA ///
 - Añadir sonidos

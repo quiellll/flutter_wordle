@@ -1,6 +1,5 @@
-// user_profile.dart
-
 import 'package:flutter/material.dart';
+import 'package:flutter_wordle/widgets/theme/theme_colors.dart';
 
 // User stats model
 class UserStats {
@@ -89,7 +88,7 @@ class _UserProfileState extends State<UserProfile> {
             },
             child: const Text(
               'Reset',
-              style: TextStyle(color: Colors.red),
+              style: TextStyle(color: WordleColors.important),
             ),
           ),
         ],

@@ -120,7 +120,26 @@ class HomePage extends StatelessWidget {
   void _startGame(BuildContext context, Language language) {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => GamePage(language: language),
+        builder: (context) => GamePage(
+          language: language,
+          onGameComplete: (won, attempts) {
+            final newGamesPlayed = userStats.gamesPlayed + 1;
+            final newGamesWon = userStats.gamesWon + (won ? 1 : 0);
+
+            // Calculate average attempts
+            final totalAttempts = (userStats.avgAttempts * userStats.gamesPlayed) + attempts;
+            final newAvgAttempts = totalAttempts / newGamesPlayed;  // Update average attempts
+
+            final newStats = UserStats(
+              username: userStats.username,
+              gamesPlayed: newGamesPlayed,
+              gamesWon: newGamesWon,
+              avgAttempts: newAvgAttempts,
+            );
+
+            onStatsUpdated(newStats);
+          },
+        ),
       ),
     );
   }
@@ -210,7 +229,7 @@ class HomePage extends StatelessWidget {
                     child: _buildLanguageButton(
                       context,
                       'English',
-                      WordleColors().englishButton,
+                      WordleColors.englishButton,
                       () => _startGame(context, Language.english),
                     ),
                   ),
@@ -219,7 +238,7 @@ class HomePage extends StatelessWidget {
                     child: _buildLanguageButton(
                       context,
                       'Español',
-                      WordleColors().spanishButton,
+                      WordleColors.spanishButton,
                       () => _startGame(context, Language.spanish),
                     ),
                   ),
