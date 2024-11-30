@@ -4,6 +4,8 @@ import '../services/validation_provider.dart';
 import '../widgets/game/game_board.dart';
 import '../widgets/game/game_keyboard.dart';
 import '../widgets/theme/theme_toggle.dart';
+import 'package:flutter_wordle/models/models.dart';
+
 
 class GamePage extends StatefulWidget {
   final Language language;
@@ -41,6 +43,20 @@ class _GamePageState extends State<GamePage> {
         builder: (context, _) {
           return Column(
             children: [
+              if (provider.validationMessage.isNotEmpty)
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(8.0),
+                color: Colors.red.shade100,
+                child: Text(
+                  provider.validationMessage,
+                  style: TextStyle(
+                    color: Colors.red.shade800,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
               Expanded(
                 child: GameBoard(
                   attempts: provider.attempts,
@@ -63,13 +79,21 @@ class _GamePageState extends State<GamePage> {
   }
 
   void _handleSubmit() {
-    final result = provider.submitAttempt();
-    if (result == ValidationResult.win) {
+  final result = provider.submitAttempt();
+  switch (result) {
+    case ValidationResult.win:
       _showGameEndDialog(true);
-    } else if (provider.gameEnded) {
-      _showGameEndDialog(false);
-    }
+      break;
+    case ValidationResult.continue_:
+      if (provider.gameEnded) {
+        _showGameEndDialog(false);
+      }
+      break;
+      default:
+      // Other cases (invalid or not in word list) are now handled in the provider
+      break;
   }
+}
 
   void _showGameEndDialog(bool won) {
     showDialog(
