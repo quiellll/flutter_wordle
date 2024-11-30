@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_wordle/widgets/theme/theme_colors.dart';
 import 'package:flutter_wordle/widgets/theme/theme_toggle.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
@@ -86,10 +87,9 @@ class _WordleAppState extends State<WordleApp> {
         builder: (context, themeProvider, _) {
           return MaterialApp(
             title: 'Wordle',
-            theme: ThemeData(
-              primarySwatch: Colors.grey,
-              brightness: themeProvider.isDarkMode ? Brightness.dark : Brightness.light,
-            ),
+            theme: WordleColors.getLightTheme(),
+            darkTheme: WordleColors.getDarkTheme(),
+            themeMode: themeProvider.isDarkMode ? ThemeMode.dark : ThemeMode.light,
             home: HomePage(
               isDarkMode: themeProvider.isDarkMode,
               onThemeToggle: themeProvider.toggleTheme,
@@ -210,7 +210,7 @@ class HomePage extends StatelessWidget {
                     child: _buildLanguageButton(
                       context,
                       'English',
-                      Colors.blue,
+                      WordleColors().englishButton,
                       () => _startGame(context, Language.english),
                     ),
                   ),
@@ -219,7 +219,7 @@ class HomePage extends StatelessWidget {
                     child: _buildLanguageButton(
                       context,
                       'Español',
-                      Colors.orange,
+                      WordleColors().spanishButton,
                       () => _startGame(context, Language.spanish),
                     ),
                   ),

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_wordle/models/models.dart';
+import 'package:provider/provider.dart';
+import '../theme/theme_provider.dart';
 
 class GameKeyboard extends StatelessWidget {
   final Language language;
@@ -19,6 +21,7 @@ class GameKeyboard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
     final List<List<String>> layout = language == Language.english ? 
       [
         ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
@@ -42,10 +45,10 @@ class GameKeyboard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   if (row == layout.last) 
-                    _buildSpecialKey('ENTER', onEnter),
-                  ...row.map((letter) => _buildKey(letter)),
+                    _buildSpecialKey('ENTER', onEnter, isDarkMode),
+                  ...row.map((letter) => _buildKey(letter, isDarkMode)),
                   if (row == layout.last)
-                    _buildSpecialKey('⌫', onBackspace),
+                    _buildSpecialKey('⌫', onBackspace, isDarkMode),
                 ],
               ),
             ),
@@ -54,7 +57,7 @@ class GameKeyboard extends StatelessWidget {
     );
   }
 
-  Widget _buildKey(String letter) {
+  Widget _buildKey(String letter, bool isDarkMode) {
     Color getKeyColor() {
       switch (keyStates[letter]) {
         case KeyState.correct:
@@ -62,16 +65,23 @@ class GameKeyboard extends StatelessWidget {
         case KeyState.wrongPosition:
           return Colors.orange;
         case KeyState.wrong:
-          return Colors.grey;
+          return isDarkMode ? Colors.grey.shade800 : Colors.grey;
         default:
-          return Colors.grey.shade300;
+          return isDarkMode ? Colors.grey.shade700 : Colors.grey.shade300;
       }
     }
+
+    final keyColor = getKeyColor();
+    final textColor = isDarkMode || 
+                     keyStates[letter] == KeyState.correct || 
+                     keyStates[letter] == KeyState.wrongPosition 
+        ? Colors.white 
+        : Colors.black;
 
     return Padding(
       padding: const EdgeInsets.all(2),
       child: Material(
-        color: getKeyColor(),
+        color: keyColor,
         borderRadius: BorderRadius.circular(4),
         child: InkWell(
           onTap: () => onKeyTap(letter),
@@ -81,8 +91,9 @@ class GameKeyboard extends StatelessWidget {
             alignment: Alignment.center,
             child: Text(
               letter,
-              style: const TextStyle(
+              style: TextStyle(
                 fontWeight: FontWeight.bold,
+                color: textColor,
               ),
             ),
           ),
@@ -91,11 +102,14 @@ class GameKeyboard extends StatelessWidget {
     );
   }
 
-  Widget _buildSpecialKey(String text, VoidCallback onTap) {
+  Widget _buildSpecialKey(String text, VoidCallback onTap, bool isDarkMode) {
+    final backgroundColor = isDarkMode ? Colors.grey.shade700 : Colors.grey.shade300;
+    final textColor = isDarkMode ? Colors.white : Colors.black;
+
     return Padding(
       padding: const EdgeInsets.all(2),
       child: Material(
-        color: Colors.grey.shade300,
+        color: backgroundColor,
         borderRadius: BorderRadius.circular(4),
         child: InkWell(
           onTap: onTap,
@@ -105,8 +119,9 @@ class GameKeyboard extends StatelessWidget {
             alignment: Alignment.center,
             child: Text(
               text,
-              style: const TextStyle(
+              style: TextStyle(
                 fontWeight: FontWeight.bold,
+                color: textColor,
               ),
             ),
           ),

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../models/models.dart';
+import '../theme/theme_provider.dart';
+import '../theme/theme_colors.dart';
 
 class GameTile extends StatelessWidget {
   final String letter;
@@ -13,14 +16,17 @@ class GameTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
+    final colors = isDarkMode ? WordleColors.darkTheme : WordleColors.lightTheme;
+
     return Container(
       margin: const EdgeInsets.all(2),
       width: 48,
       height: 48,
       decoration: BoxDecoration(
-        color: _getColorForState(state),
+        color: _getColorForState(state, isDarkMode),
         border: Border.all(
-          color: state == TileState.empty ? Colors.grey : Colors.transparent,
+          color: state == TileState.empty ? colors.borderColor : Colors.transparent,
           width: 2,
         ),
         borderRadius: BorderRadius.circular(4),
@@ -31,22 +37,33 @@ class GameTile extends StatelessWidget {
         style: TextStyle(
           fontSize: 24,
           fontWeight: FontWeight.bold,
-          color: state == TileState.empty ? Colors.black : Colors.white,
+          color: _getTextColor(state, isDarkMode),
         ),
       ),
     );
   }
 
-  Color _getColorForState(TileState state) {
+  Color _getColorForState(TileState state, bool isDarkMode) {
+    final colors = isDarkMode ? WordleColors.darkTheme : WordleColors.lightTheme;
+
     switch (state) {
       case TileState.correct:
-        return Colors.green;
+        return colors.correctTile;
       case TileState.wrongPosition:
-        return Colors.orange;
+        return colors.wrongPositionTile;
       case TileState.wrong:
-        return Colors.grey;
+        return colors.wrongTile;
       case TileState.empty:
-        return Colors.white;
+        return colors.emptyTile;
     }
+  }
+
+  Color _getTextColor(TileState state, bool isDarkMode) {
+    final colors = isDarkMode ? WordleColors.darkTheme : WordleColors.lightTheme;
+
+    if (state == TileState.empty) {
+      return colors.textColor;  // Use the theme's text color instead of emptyTile
+    }
+    return colors.tileText;
   }
 }
