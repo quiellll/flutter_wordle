@@ -54,13 +54,11 @@ class ValidationProvider extends ChangeNotifier {
         throw Exception('No words found in the file');
       }
 
-      print('Loaded ${wordList.length} words');
     } catch (e) {
       // Fallback to a default list if file reading fails
       wordList = language == Language.english 
           ? ['WORLD', 'APPLE', 'SMILE', 'DANCE', 'HAPPY']
           : ['MUNDO', 'PERRO', 'GATOS', 'MESAS', 'AGUAS'];
-      print('Error loading word list: $e');
     }
   }
 
@@ -69,7 +67,6 @@ class ValidationProvider extends ChangeNotifier {
     
     // Randomly select an answer from the word list
     answer = wordList[random.nextInt(wordList.length)];
-    print('Selected answer: $answer');
     notifyListeners();
   }
 
