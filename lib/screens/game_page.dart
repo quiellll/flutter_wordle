@@ -85,21 +85,17 @@ class _GamePageState extends State<GamePage> {
   switch (result) {
     case ValidationResult.win:
       _showGameEndDialog(true);
-      // Call the callback with game results
       widget.onGameComplete?.call(true, provider.attempts.length);
       break;
     case ValidationResult.end:
       _showGameEndDialog(false);
-      // Call the callback with game results
-      widget.onGameComplete?.call(false, 6); // Max attempts reached
+      widget.onGameComplete?.call(false, provider.attempts.length);
       break;
     case ValidationResult.continue_:
-      if (provider.gameEnded) {
-        _showGameEndDialog(false);
-      }
       break;
-      default:
-      // Other cases (invalid or not in word list) are now handled in the provider
+    case ValidationResult.invalid:
+    case ValidationResult.notInWordList:
+      // These are handled by the validation messages in the provider
       break;
   }
 }

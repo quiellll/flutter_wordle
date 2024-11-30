@@ -117,8 +117,6 @@ class ValidationProvider extends ChangeNotifier {
       return ValidationResult.invalid;
     }
 
-   
-
     if (!wordList.contains(currentInput)) {
       _setTemporaryMessage('La palabra no está en la lista');
       return ValidationResult.notInWordList;
@@ -178,6 +176,8 @@ class ValidationProvider extends ChangeNotifier {
     // Check if game is lost (6 attempts)
     if (attempts.length >= 6) {
       gameEnded = true;
+      notifyListeners();
+      return ValidationResult.end;
     }
 
     notifyListeners();
