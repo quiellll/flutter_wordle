@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_wordle/models.dart';
+import 'package:flutter_wordle/game_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_wordle/user_profile.dart';
 
@@ -123,6 +125,14 @@ class HomePage extends StatelessWidget {
     required this.onStatsUpdated,
   });
 
+  void _startGame(BuildContext context, Language language) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => GamePage(language: language),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -214,9 +224,7 @@ class HomePage extends StatelessWidget {
                       context,
                       'English',
                       Colors.blue,
-                      () {
-                        // Start game with English words
-                      },
+                      () => _startGame(context, Language.english),
                     ),
                   ),
                   const SizedBox(width: 20),
@@ -225,9 +233,7 @@ class HomePage extends StatelessWidget {
                       context,
                       'Español',
                       Colors.orange,
-                      () {
-                        // Start game with Spanish words
-                      },
+                      () => _startGame(context, Language.spanish),
                     ),
                   ),
                 ],
