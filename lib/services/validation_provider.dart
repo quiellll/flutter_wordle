@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_wordle/models.dart';
+import 'package:flutter_wordle/models/models.dart';
 
 class ValidationProvider extends ChangeNotifier {
   final Language language;
