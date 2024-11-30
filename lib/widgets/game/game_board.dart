@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'models.dart';
+import '../../models/models.dart';
 import 'game_tile.dart';
 
 class GameBoard extends StatelessWidget {

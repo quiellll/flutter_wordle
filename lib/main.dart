@@ -1,17 +1,23 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_wordle/models.dart';
-import 'package:flutter_wordle/game_page.dart';
+import 'package:flutter_wordle/widgets/theme/theme_toggle.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_wordle/user_profile.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_wordle/models/models.dart';
+import 'package:flutter_wordle/screens/game_page.dart';
+import 'package:flutter_wordle/widgets/user/user_profile.dart';
+import 'package:flutter_wordle/widgets/theme/theme_provider.dart';
 
 void main() async {
-  // Para que SharedPreferences funcione correctamente, necesitamos
   WidgetsFlutterBinding.ensureInitialized();
-  // Inicializar las SharedPreferences
   final SharedPreferencesAsync asyncPrefs = SharedPreferencesAsync();
-  runApp(WordleApp(prefs: asyncPrefs));
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => ThemeProvider(asyncPrefs),
+      child: WordleApp(prefs: asyncPrefs),  // Add the prefs parameter here
+    ),
+  );
 }
 
 class WordleApp extends StatefulWidget {
@@ -20,61 +26,47 @@ class WordleApp extends StatefulWidget {
   const WordleApp({
     super.key,
     required this.prefs,
-    });
+  });
 
   @override
   State<WordleApp> createState() => _WordleAppState();
 }
 
 class _WordleAppState extends State<WordleApp> {
-  bool isDarkMode = false;
+  late ThemeProvider themeProvider;
   late UserStats userStats;
 
   @override
   void initState() {
     super.initState();
+    themeProvider = ThemeProvider(widget.prefs);
     userStats = UserStats(username: 'Player');
     _loadSettings();
   }
 
   Future<void> _loadSettings() async {
     try {
-      // Get theme setting with null safety
-      final bool? darkMode = await widget.prefs.getBool('isDarkMode');
-      isDarkMode = darkMode ?? false;  // Use false as default if null
-
-      // Get user stats with null safety
       final String? statsString = await widget.prefs.getString('userStats');
       
       if (statsString != null) {
         try {
-          // Parse string into a map
           Map<String, dynamic> statsMap = Map<String, dynamic>.from(
-            // Use jsondecode to parse the stored JSON string
             jsonDecode(statsString)
           );
           userStats = UserStats.fromJson(statsMap);
         } catch (e) {
-          // If there's an error parsing the stats, use default
           userStats = UserStats(username: 'Player');
         }
-      } else {
-        // If no stats exist yet, use default
-        userStats = UserStats(username: 'Player');
       }
       
-      // Update the UI
       setState(() {});
     } catch (e) {
-      // Set defaults
-      isDarkMode = false;
       userStats = UserStats(username: 'Player');
       setState(() {});
     }
   }
 
   Future<void> _saveSettings() async {
-    await widget.prefs.setBool('isDarkMode', isDarkMode);
     final statsJson = jsonEncode(userStats.toJson());
     await widget.prefs.setString('userStats', statsJson);
   }
@@ -86,26 +78,26 @@ class _WordleAppState extends State<WordleApp> {
     });
   }
 
-  void _toggleTheme() {
-    setState(() {
-      isDarkMode = !isDarkMode;
-      _saveSettings();
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Wordle',
-      theme: ThemeData(
-        primarySwatch: Colors.grey,
-        brightness: isDarkMode ? Brightness.dark : Brightness.light,
-      ),
-      home: HomePage(
-        isDarkMode: isDarkMode,
-        onThemeToggle: _toggleTheme,
-        userStats: userStats,
-        onStatsUpdated: _updateUserStats,
+    return ChangeNotifierProvider.value(
+      value: themeProvider,
+      child: Consumer<ThemeProvider>(
+        builder: (context, themeProvider, _) {
+          return MaterialApp(
+            title: 'Wordle',
+            theme: ThemeData(
+              primarySwatch: Colors.grey,
+              brightness: themeProvider.isDarkMode ? Brightness.dark : Brightness.light,
+            ),
+            home: HomePage(
+              isDarkMode: themeProvider.isDarkMode,
+              onThemeToggle: themeProvider.toggleTheme,
+              userStats: userStats,
+              onStatsUpdated: _updateUserStats,
+            ),
+          );
+        },
       ),
     );
   }
@@ -155,12 +147,7 @@ class HomePage extends StatelessWidget {
                       ),
                     ),
                     const Spacer(),
-                    IconButton(
-                      icon: Icon(
-                        isDarkMode ? Icons.dark_mode : Icons.light_mode,
-                      ),
-                      onPressed: onThemeToggle,
-                    ),
+                    const ThemeToggle(),
                     IconButton(
                       icon: const Icon(Icons.person),
                       onPressed: () {

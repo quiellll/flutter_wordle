@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'models.dart';
-import 'validation_provider.dart';
-import 'game_board.dart';
-import 'game_keyboard.dart';
+import '../models/models.dart';
+import '../services/validation_provider.dart';
+import '../widgets/game/game_board.dart';
+import '../widgets/game/game_keyboard.dart';
+import '../widgets/theme/theme_toggle.dart';
 
 class GamePage extends StatefulWidget {
   final Language language;
@@ -31,6 +32,9 @@ class _GamePageState extends State<GamePage> {
       appBar: AppBar(
         title: const Text('Wordle'),
         centerTitle: true,
+        actions: const [
+          ThemeToggle(),
+        ],
       ),
       body: ListenableBuilder(
         listenable: provider,

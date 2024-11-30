@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show ByteData, rootBundle;
 import 'dart:convert';
 import 'dart:math';
-import 'package:flutter_wordle/models.dart';
+
+import 'package:flutter_wordle/models/models.dart';
 
 class ValidationProvider extends ChangeNotifier {
   final Language language;

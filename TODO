@@ -4,7 +4,8 @@
 - Comprobación de palabras en función de la lista
 
 /// FUNCIONALIDADES ///
-- Toggle modo oscuro en pantalla de juego
+√ Toggle modo oscuro en pantalla de juego 
+- Ajustar colores modo oscuro para que el teclado siga siendo visible
 - Actualizar estadísicas de juego tras cada partida
 - Comprobar veracidad de estadísticas
 
