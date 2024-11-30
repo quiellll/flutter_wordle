@@ -36,6 +36,7 @@ class GameBoard extends StatelessWidget {
                 (col) => GameTile(
                   letter: displayText[col],
                   state: tileStates[row][col],
+                  position: col,  // Used to stagger the animations
                 ),
               ),
             ),

@@ -4,8 +4,6 @@ import '../services/validation_provider.dart';
 import '../widgets/game/game_board.dart';
 import '../widgets/game/game_keyboard.dart';
 import '../widgets/theme/theme_toggle.dart';
-import 'package:flutter_wordle/models/models.dart';
-
 
 class GamePage extends StatefulWidget {
   final Language language;
