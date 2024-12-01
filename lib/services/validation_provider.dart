@@ -6,11 +6,9 @@ import 'dart:async';
 
 import 'package:flutter_wordle/models/models.dart';
 
-
-
 class ValidationProvider extends ChangeNotifier {
 
-   String validationMessage = '';
+  String validationMessage = '';
   Timer? _validationMessageTimer;
 
   final Language language;
@@ -22,8 +20,13 @@ class ValidationProvider extends ChangeNotifier {
   bool gameEnded = false;
   List<String> wordList = [];
 
+  bool _isInitialized = false;
 
   ValidationProvider({required this.language}) {
+    // Clear everything on initialization
+    currentInput = '';
+    attempts = [];
+    gameEnded = false;
     _initializeGame();
   }
 
@@ -37,6 +40,14 @@ class ValidationProvider extends ChangeNotifier {
 
     // Select random answer
     _selectRandomAnswer();
+  }
+
+  bool get isInitialized => _isInitialized;
+
+  Future<void> resetGame() async {
+    _isInitialized = false;
+    notifyListeners();
+    await _initializeGame();
   }
 
   Future<void> _loadWordList() async {
@@ -80,6 +91,7 @@ class ValidationProvider extends ChangeNotifier {
   }
 
   void _initializeKeyStates() {
+    keyStates = {};
     for (var c in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')) {
       keyStates[c] = KeyState.unused;
     }

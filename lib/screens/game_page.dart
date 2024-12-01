@@ -105,8 +105,12 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
           appBar: AppBar(
             title: const Text('Wordle'),
             centerTitle: true,
-            actions: const [
-              ThemeToggle(),
+            actions: [
+              const ThemeToggle(),
+              IconButton(
+                icon: const Icon(Icons.refresh),
+                onPressed: _handleRestart,
+              ),
             ],
           ),
           body: Column(
@@ -231,6 +235,23 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
     }
   }
 
+  void _handleRestart() {
+    setState(() {
+      overlayWidget = null;
+      _confettiController.reset();
+      _currentMessage = '';
+      _isMessageVisible = false;
+      _messageController.reset();
+      
+      // Remove old listener
+      provider.removeListener(_handleValidationMessage);
+      
+      // Create new provider with fresh state
+      provider = ValidationProvider(language: widget.language);
+      provider.addListener(_handleValidationMessage);
+    });
+  }
+
   void _showGameEndOverlay(bool won) {
     setState(() {
       overlayWidget = GameEndOverlay(
@@ -238,6 +259,7 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
         answer: provider.answer,
         attempts: provider.attempts.length,
         onBackToMenu: () => Navigator.of(context).pop(),
+        onRestart: _handleRestart,
         lastAttemptStates: provider.tileStates[provider.attempts.length - 1],
       );
     });

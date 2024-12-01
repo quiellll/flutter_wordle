@@ -44,13 +44,11 @@ class _GameTileState extends State<GameTile> with SingleTickerProviderStateMixin
       }
     });
 
-    // Simple animation with custom curve for snappier middle
     _flipAnimation = Tween<double>(
       begin: 0,
       end: pi/2,
     ).animate(CurvedAnimation(
       parent: _controller,
-      // Using linear for the middle part, but still smooth at start/end
       curve: Curves.linear,
     ));
 
@@ -60,7 +58,15 @@ class _GameTileState extends State<GameTile> with SingleTickerProviderStateMixin
   @override
   void didUpdateWidget(GameTile oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.state != _previousState &&
+    
+    // Reset flip state if tile becomes empty
+    if (widget.state == TileState.empty && oldWidget.state != TileState.empty) {
+      setState(() {
+        _isFlipped = false;
+      });
+    }
+    // Normal flip animation for non-empty states
+    else if (widget.state != _previousState &&
         _previousState == TileState.empty &&
         widget.state != TileState.empty) {
       _isFlipped = false;
@@ -74,30 +80,21 @@ class _GameTileState extends State<GameTile> with SingleTickerProviderStateMixin
   }
 
   @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  Color _getColorForState(TileState state, bool isDarkMode) {
-    final colors = isDarkMode ? WordleColors.darkTheme : WordleColors.lightTheme;
-
-    switch (state) {
-      case TileState.correct:
-        return colors.correctTile;
-      case TileState.wrongPosition:
-        return colors.wrongPositionTile;
-      case TileState.wrong:
-        return colors.wrongTile;
-      case TileState.empty:
-        return colors.emptyTile;
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
     final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
     final colors = isDarkMode ? WordleColors.darkTheme : WordleColors.lightTheme;
+
+    // Force unflipped state for empty tiles
+    final isEffectivelyFlipped = _isFlipped && widget.state != TileState.empty;
+
+    // Get background color based on state
+    final backgroundColor = isEffectivelyFlipped 
+        ? widget.state == TileState.correct 
+            ? colors.correctTile
+            : widget.state == TileState.wrongPosition 
+                ? colors.wrongPositionTile
+                : colors.wrongTile
+        : colors.emptyTile;
 
     return AnimatedBuilder(
       animation: _flipAnimation,
@@ -112,11 +109,9 @@ class _GameTileState extends State<GameTile> with SingleTickerProviderStateMixin
             width: 48,
             height: 48,
             decoration: BoxDecoration(
-              color: _isFlipped 
-                  ? _getColorForState(widget.state, isDarkMode)
-                  : colors.emptyTile,
+              color: backgroundColor,
               border: Border.all(
-                color: !_isFlipped || widget.state == TileState.empty 
+                color: !isEffectivelyFlipped || widget.state == TileState.empty 
                     ? colors.borderColor 
                     : Colors.transparent,
                 width: 2,
@@ -129,7 +124,7 @@ class _GameTileState extends State<GameTile> with SingleTickerProviderStateMixin
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
-                color: _isFlipped 
+                color: isEffectivelyFlipped 
                     ? colors.tileText
                     : colors.textColor,
               ),

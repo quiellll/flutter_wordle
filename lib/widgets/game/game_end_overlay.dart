@@ -7,6 +7,7 @@ class GameEndOverlay extends StatefulWidget {
   final String answer;
   final int attempts;
   final VoidCallback onBackToMenu;
+  final VoidCallback onRestart; // Handles game restart
   final List<TileState> lastAttemptStates;
 
   const GameEndOverlay({
@@ -15,6 +16,7 @@ class GameEndOverlay extends StatefulWidget {
     required this.answer,
     required this.attempts,
     required this.onBackToMenu,
+    required this.onRestart,
     required this.lastAttemptStates,
   });
 
@@ -158,28 +160,54 @@ class _GameEndOverlayState extends State<GameEndOverlay> with SingleTickerProvid
                                   ],
                                 ),
                               const SizedBox(height: 20),
-                              SizedBox(
-                                width: double.infinity,
-                                child: ElevatedButton(
-                                  onPressed: widget.onBackToMenu,
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: widget.won 
-                                        ? colors.correctTile 
-                                        : colors.wrongTile,
-                                    foregroundColor: colors.tileText,
-                                    padding: const EdgeInsets.symmetric(vertical: 16),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12),
+                              Column(
+                                children: [
+                                  SizedBox(
+                                    width: double.infinity,
+                                    child: ElevatedButton(
+                                      onPressed: widget.onRestart,
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: colors.correctTile,
+                                        foregroundColor: colors.tileText,
+                                        padding: const EdgeInsets.symmetric(vertical: 16),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(12),
+                                        ),
+                                      ),
+                                      child: const Text(
+                                        'Jugar de Nuevo',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                  child: const Text(
-                                    'Volver al Menú Principal',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
+                                  const SizedBox(height: 12),
+                                  SizedBox(
+                                    width: double.infinity,
+                                    child: ElevatedButton(
+                                      onPressed: widget.onBackToMenu,
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: widget.won 
+                                            ? colors.correctTile 
+                                            : colors.wrongTile,
+                                        foregroundColor: colors.tileText,
+                                        padding: const EdgeInsets.symmetric(vertical: 16),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(12),
+                                        ),
+                                      ),
+                                      child: const Text(
+                                        'Volver al Menú Principal',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                ),
+                                ],
                               ),
                             ],
                           ),
