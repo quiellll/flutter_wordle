@@ -76,6 +76,7 @@ class ValidationProvider extends ChangeNotifier {
     // Randomly select an answer from the word list
     answer = wordList[random.nextInt(wordList.length)];
     notifyListeners();
+    print(answer);
   }
 
   void _initializeKeyStates() {
