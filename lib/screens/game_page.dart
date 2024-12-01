@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_wordle/screens/home_page.dart';
 import '../models/models.dart';
 import '../services/validation_provider.dart';
 import '../widgets/game/game_board.dart';
@@ -7,7 +6,6 @@ import '../widgets/game/game_keyboard.dart';
 import '../widgets/game/game_end_overlay.dart';
 import '../widgets/theme/theme_toggle.dart';
 import '../widgets/effects/popper_generator.dart';
-import '../utils/transitions.dart';
 
 class GamePage extends StatefulWidget {
   final Language language;
