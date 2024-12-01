@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 class WordleColors {
 
-  static const Color spanishButton = Colors.blue;
-  static const Color englishButton = Colors.green;
+  static const Color spanishButton = Colors.red;
+  static const Color englishButton = Colors.blue;
   static const Color important = Colors.red; 
 
   // Light theme colors

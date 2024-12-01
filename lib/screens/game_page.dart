@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_wordle/screens/home_page.dart';
 import '../models/models.dart';
 import '../services/validation_provider.dart';
 import '../widgets/game/game_board.dart';
 import '../widgets/game/game_keyboard.dart';
+import '../widgets/game/game_end_overlay.dart';
 import '../widgets/theme/theme_toggle.dart';
 import '../widgets/effects/popper_generator.dart';
+import '../utils/transitions.dart';
 
 class GamePage extends StatefulWidget {
   final Language language;
-  final Function(bool won, int attemts)? onGameComplete;
+  final Function(bool won, int attempts)? onGameComplete;
 
   const GamePage({
     super.key,
@@ -28,9 +31,9 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
   late Animation<double> _messageFade;
   late Animation<double> _messageRotate;
   
-  // Keep track of the current message and visibility
   String _currentMessage = '';
   bool _isMessageVisible = false;
+  Widget? overlayWidget;
 
   @override
   void initState() {
@@ -80,7 +83,6 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
 
   void _handleAnimationStatus(AnimationStatus status) {
     if (status == AnimationStatus.dismissed) {
-      // Only hide the message when the animation is completely finished
       setState(() {
         _isMessageVisible = false;
         _currentMessage = '';
@@ -111,7 +113,6 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
           ),
           body: Column(
             children: [
-              // Animated validation message
               SizedBox(
                 height: 50,
                 child: AnimatedBuilder(
@@ -149,7 +150,6 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
                   },
                 ),
               ),
-              // Rest of the game content remains the same...
               Expanded(
                 child: ListenableBuilder(
                   listenable: provider,
@@ -178,7 +178,6 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
             ],
           ),
         ),
-        // Confetti layer
         for (final direction in [PopDirection.forwardX, PopDirection.backwardX])
           Positioned.fill(
             child: PartyPopperGenerator(
@@ -193,6 +192,7 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
               pieceWidth: PopperConfig.defaultProps['pieceWidth'] as double,
             ),
           ),
+        if (overlayWidget != null) overlayWidget!,
       ],
     );
   }
@@ -207,7 +207,6 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
       _messageController.forward();
     } else {
       _messageController.reverse();
-      // Note: We don't clear the message here, we wait for animation to complete
     }
   }
 
@@ -217,17 +216,14 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
       case ValidationResult.win:
         Future.delayed(const Duration(milliseconds: 1200), () {
           _confettiController.forward().then((_) {
-            Future.delayed(const Duration(milliseconds: 500), () {
-              _confettiController.reset();
-              _showGameEndDialog(true);
-            });
+            widget.onGameComplete?.call(true, provider.attempts.length);
           });
         });
-        widget.onGameComplete?.call(true, provider.attempts.length);
+        _showGameEndOverlay(true);
         break;
       case ValidationResult.end:
-        _showGameEndDialog(false);
         widget.onGameComplete?.call(false, provider.attempts.length);
+        _showGameEndOverlay(false);
         break;
       case ValidationResult.continue_:
         break;
@@ -237,25 +233,15 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
     }
   }
 
-  void _showGameEndDialog(bool won) {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => AlertDialog(
-        title: Text(won ? '¡Ganaste!' : 'Game Over'),
-        content: Text(won 
-          ? 'Felicitaciones, adivinaste la palabra!'
-          : 'La palabra era: ${provider.answer}'),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop(); // Close dialog
-              Navigator.of(context).pop(); // Return to main menu
-            },
-            child: const Text('Volver al menú'),
-          ),
-        ],
-      ),
-    );
+  void _showGameEndOverlay(bool won) {
+    setState(() {
+      overlayWidget = GameEndOverlay(
+        won: won,
+        answer: provider.answer,
+        attempts: provider.attempts.length,
+        onBackToMenu: () => Navigator.of(context).pop(),
+        lastAttemptStates: provider.tileStates[provider.attempts.length - 1],
+      );
+    });
   }
 }
