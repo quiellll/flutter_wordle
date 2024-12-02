@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_wordle/models/models.dart';
-import 'package:provider/provider.dart';
-import '../theme/theme_provider.dart';
+import 'package:flutter_wordle/widgets/theme/theme_colors.dart';
 
 class GameKeyboard extends StatelessWidget {
   final Language language;
@@ -21,7 +20,11 @@ class GameKeyboard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDarkMode = context.watch<ThemeProvider>().isDarkMode;
+    // Get theme colors through the public static final properties
+    final colors = Theme.of(context).brightness == Brightness.dark
+        ? WordleColors.darkTheme
+        : WordleColors.lightTheme;
+
     final List<List<String>> layout = language == Language.english ? 
       [
         ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
@@ -45,10 +48,10 @@ class GameKeyboard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   if (row == layout.last) 
-                    _buildSpecialKey('➔', onEnter, isDarkMode),
-                  ...row.map((letter) => _buildKey(letter, isDarkMode)),
+                    _buildSpecialKey('➔', onEnter, colors),
+                  ...row.map((letter) => _buildKey(letter, colors)),
                   if (row == layout.last)
-                    _buildSpecialKey('⌫', onBackspace, isDarkMode),
+                    _buildSpecialKey('⌫', onBackspace, colors),
                 ],
               ),
             ),
@@ -57,26 +60,28 @@ class GameKeyboard extends StatelessWidget {
     );
   }
 
-  Widget _buildKey(String letter, bool isDarkMode) {
+  Widget _buildKey(String letter, Object colors) {
+    // Get theme-specific colors
+    final themeColors = colors as dynamic;
+    
     Color getKeyColor() {
       switch (keyStates[letter]) {
         case KeyState.correct:
-          return Colors.green;
+          return themeColors.correctTile;
         case KeyState.wrongPosition:
-          return Colors.orange;
+          return themeColors.wrongPositionTile;
         case KeyState.wrong:
-          return isDarkMode ? Colors.grey.shade800 : Colors.grey;
+          return themeColors.wrongTile;
         default:
-          return isDarkMode ? Colors.grey.shade700 : Colors.grey.shade300;
+          return themeColors.keyboardDefault;
       }
     }
 
     final keyColor = getKeyColor();
-    final textColor = isDarkMode || 
-                     keyStates[letter] == KeyState.correct || 
-                     keyStates[letter] == KeyState.wrongPosition 
-        ? Colors.white 
-        : Colors.black;
+    final textColor = keyStates[letter] == KeyState.correct || 
+                     keyStates[letter] == KeyState.wrongPosition
+        ? themeColors.tileText 
+        : themeColors.textColor;
 
     return Padding(
       padding: const EdgeInsets.all(2),
@@ -102,9 +107,11 @@ class GameKeyboard extends StatelessWidget {
     );
   }
 
-  Widget _buildSpecialKey(String text, VoidCallback onTap, bool isDarkMode) {
-    final backgroundColor = isDarkMode ? Colors.grey.shade700 : Colors.grey.shade300;
-    final textColor = isDarkMode ? Colors.white : Colors.black;
+  Widget _buildSpecialKey(String text, VoidCallback onTap, Object colors) {
+    // Get theme-specific colors
+    final themeColors = colors as dynamic;
+    final backgroundColor = themeColors.keyboardDefault;
+    final textColor = themeColors.textColor;
 
     return Padding(
       padding: const EdgeInsets.all(2),

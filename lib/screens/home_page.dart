@@ -151,10 +151,16 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                         ),
                       ),
                       const Spacer(),
-                      const ThemeToggle(),
-                      UserProfileButton(
-                        userStats: widget.userStats,
-                        onStatsUpdated: widget.onStatsUpdated,
+                      IconTheme(
+                        data: IconThemeData(color: colors.textColor),
+                        child: const ThemeToggle(),
+                      ),
+                      IconTheme(
+                        data: IconThemeData(color: colors.textColor),
+                        child: UserProfileButton(
+                          userStats: widget.userStats,
+                          onStatsUpdated: widget.onStatsUpdated,
+                        ),
                       ),
                     ],
                   ),

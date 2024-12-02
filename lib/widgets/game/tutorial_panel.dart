@@ -140,11 +140,11 @@ class _TutorialDialogState extends State<TutorialDialog> with SingleTickerProvid
                     child: Container(
                       constraints: const BoxConstraints(maxWidth: 400, maxHeight: 600),
                       decoration: BoxDecoration(
-                        color: isDark ? colors.emptyTile : Colors.white,
+                        color: colors.dialogBackground,  // Use our themed dialog background
                         borderRadius: BorderRadius.circular(24),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.2),
+                            color: colors.shadowColor,  // Also update shadow to use themed color
                             blurRadius: 20,
                             offset: const Offset(0, 4),
                           ),

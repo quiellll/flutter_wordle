@@ -48,6 +48,8 @@ class _UserProfileState extends State<UserProfile> {
   late TextEditingController _usernameController;
   late UserStats currentStats;
   bool _isEditing = false;
+  static const int maxUsernameLength = 20;
+  static const String defaultUsername = 'Jugador';
 
   @override
   void initState() {
@@ -63,19 +65,49 @@ class _UserProfileState extends State<UserProfile> {
   }
 
   Future<void> _resetAllData() async {
+    final colors = Theme.of(context).brightness == Brightness.dark
+        ? WordleColors.darkTheme
+        : WordleColors.lightTheme;
+        
     return showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('¿Quieres restablecer tus datos?'),
-        content: const Text(
+        backgroundColor: colors.dialogBackground,
+        title: Text(
+          '¿Quieres restablecer tus datos?',
+          style: TextStyle(
+            color: colors.textColor,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        content: Text(
           'Esto eliminará tu usuario y tus estadísticas. Esta acción no es reversible.',
+          style: TextStyle(
+            color: colors.secondaryText,
+          ),
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
         ),
         actions: [
-          TextButton(
+          // Cancel button with default theme color
+          ElevatedButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancelar'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: colors.dialogButton,
+              foregroundColor: colors.dialogButtonText,
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+            child: const Text(
+              'Cancelar',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
           ),
-          TextButton(
+          // Reset button with danger/red color
+          ElevatedButton(
             onPressed: () {
               setState(() {
                 currentStats = UserStats(username: 'Jugador');
@@ -84,9 +116,17 @@ class _UserProfileState extends State<UserProfile> {
               widget.onStatsUpdated(currentStats);
               Navigator.pop(context);
             },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: WordleColors.important,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
             child: const Text(
               'Restablecer',
-              style: TextStyle(color: WordleColors.important),
+              style: TextStyle(fontWeight: FontWeight.bold),
             ),
           ),
         ],
@@ -95,20 +135,18 @@ class _UserProfileState extends State<UserProfile> {
   }
 
   void _saveChanges() {
-    if (_usernameController.text.trim().isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('El nombre de usuario no puede estar vacío.')),
-      );
-      return;
-    }
-
+    final newUsername = _usernameController.text.trim().isEmpty 
+        ? defaultUsername 
+        : _usernameController.text.trim();
+    
     setState(() {
       currentStats = UserStats(
-        username: _usernameController.text.trim(),
+        username: newUsername,
         gamesPlayed: currentStats.gamesPlayed,
         gamesWon: currentStats.gamesWon,
         avgAttempts: currentStats.avgAttempts,
       );
+      _usernameController.text = newUsername;
       _isEditing = false;
     });
     widget.onStatsUpdated(currentStats);
@@ -163,14 +201,24 @@ class _UserProfileState extends State<UserProfile> {
                   child: TextField(
                     controller: _usernameController,
                     enabled: _isEditing,
+                    maxLength: maxUsernameLength,
+                    cursorColor: colors.textColor, // Match cursor color to text color
                     style: TextStyle(
                       color: _isEditing ? colors.textColor : colors.secondaryText,
                     ),
                     decoration: InputDecoration(
+                      counterText: '', // Hide the character counter
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
                         borderSide: BorderSide(
                           color: _isEditing ? colors.borderColor : colors.secondaryText,
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder( // Add focused border styling
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide(
+                          color: colors.borderColor,
+                          width: 2.0, // Slightly thicker border when focused
                         ),
                       ),
                       enabledBorder: OutlineInputBorder(

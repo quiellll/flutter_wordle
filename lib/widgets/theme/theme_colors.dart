@@ -1,68 +1,81 @@
 import 'package:flutter/material.dart';
 
 class WordleColors {
-  // Existing button colors
-  static const Color spanishButton = Colors.red;
-  static const Color englishButton = Colors.blue;
-  static const Color important = Colors.red;
+  // Language selection buttons
+  static const Color spanishButton = Color(0xFFC35831);  // Burnt orange
+  static const Color englishButton = Color(0xFFB44B28);  // Rust red
+  static const Color important = Color(0xFFD32F2F);    // Warm red
 
   // Light theme colors
   static final lightTheme = _WordleThemeColors(
     // Home screen colors
-    mainText: Colors.grey,
-    secondaryText: Colors.grey.shade500,
-    cardBackground: Colors.white,
-    backgroundColor: Colors.grey.shade100,
-    dividerColor: Colors.grey.withOpacity(0.2),
-    shadowColor: Colors.black.withOpacity(0.08),
-    statBoxBackground: Colors.grey[200]!,
+    mainText: const Color(0xFF4A3728),  // Rich brown text
+    secondaryText: const Color(0xFF7A6A5B),  // Softer brown text
+    cardBackground: const Color(0xFFF5E6D3),  // Warm cream
+    backgroundColor: const Color(0xFFEDE0CC),  // Light parchment
+    dividerColor: const Color(0xFF7A6A5B).withOpacity(0.2),
+    shadowColor: const Color(0xFF4A3728).withOpacity(0.08),
+    statBoxBackground: const Color(0xFFE6D5BC),  // Slightly darker cream
 
     // Game colors
-    correctTile: Colors.green,
-    wrongPositionTile: Colors.orange,
+    correctTile: Colors.green,  // Maintained as requested
+    wrongPositionTile: Colors.orange,  // Maintained as requested
     tileText: Colors.white,
-    emptyTile: Colors.white,
-    wrongTile: Colors.grey,
-    borderColor: Colors.grey,
-    textColor: Colors.black,
-    keyboardDefault: Colors.grey.shade300,
+    emptyTile: const Color(0xFFF5E6D3),  // Matching cream background
+    wrongTile: const Color(0xFF8B7355),  // Distinct leather brown for wrong tiles
+    borderColor: const Color(0xFF7A6A5B),  // Medium brown
+    textColor: const Color(0xFF4A3728),  // Rich brown
+    keyboardDefault: const Color(0xFFD4C3AE),  // Light leather tone
     
     // Message colors
-    errorBackground: Colors.red.shade100,
-    errorText: Colors.red.shade800,
+    errorBackground: const Color(0xFFFFE5E5),
+    errorText: const Color(0xFF8B4513),
+
+    // Dialog colors
+    dialogBackground: const Color(0xFFF5E6D3),  // Warm cream
+    dialogButton: const Color(0xFF8B4513),  // Saddle brown
+    dialogButtonText: Colors.white,
+    overlayBackground: const Color(0xFFF5E6D3),  // Warm cream for overlays
   );
 
   // Dark theme colors
   static final darkTheme = _WordleThemeColors(
     // Home screen colors
-    mainText: Colors.grey,
-    secondaryText: Colors.grey.shade500,
-    cardBackground: const Color(0xFF2C2C2C),
-    backgroundColor: const Color(0xFF1A1A1A),
-    dividerColor: Colors.grey.withOpacity(0.2),
+    mainText: const Color(0xFFD4C3AE),  // Light leather
+    secondaryText: const Color(0xFFAA9884),  // Medium leather
+    cardBackground: const Color(0xFF3C2A1E),  // Rich leather brown
+    backgroundColor: const Color(0xFF2C1810),  // Deep leather
+    dividerColor: const Color(0xFFAA9884).withOpacity(0.2),
     shadowColor: Colors.black.withOpacity(0.15),
-    statBoxBackground: Colors.grey[800]!,
+    statBoxBackground: const Color(0xFF4A3728),  // Medium-dark brown
 
     // Game colors
-    correctTile: Colors.green,
-    wrongPositionTile: Colors.orange,
+    correctTile: Colors.green,  // Maintained as requested
+    wrongPositionTile: Colors.orange,  // Maintained as requested
     tileText: Colors.white,
-    emptyTile: Colors.grey.shade900,
-    wrongTile: Colors.grey.shade800,
-    borderColor: Colors.grey.shade700,
-    textColor: Colors.white,
-    keyboardDefault: Colors.grey.shade700,
+    emptyTile: const Color(0xFF3C2A1E),  // Matching card background
+    wrongTile: const Color(0xFF725544),  // Distinct darker leather for wrong tiles
+    borderColor: const Color(0xFF8B7355),  // Medium leather
+    textColor: const Color(0xFFE6D5BC),  // Light parchment
+    keyboardDefault: const Color(0xFF4A3728),  // Rich brown
     
     // Message colors
-    errorBackground: Colors.red.shade900,
-    errorText: Colors.red.shade100,
+    errorBackground: const Color(0xFF4A2520),
+    errorText: const Color(0xFFFFCCCC),
+
+    // Dialog colors
+    dialogBackground: const Color(0xFF3C2A1E),  // Rich leather brown
+    dialogButton: const Color(0xFF6B4423),  // Deeper brown
+    dialogButtonText: const Color(0xFFE6D5BC),  // Light parchment
+    overlayBackground: const Color(0xFF3C2A1E),  // Rich leather brown for overlays
   );
 
   static ThemeData getLightTheme() {
     return ThemeData(
-      primarySwatch: Colors.grey,
+      primarySwatch: Colors.brown,
       brightness: Brightness.light,
       scaffoldBackgroundColor: lightTheme.backgroundColor,
+      dialogBackgroundColor: lightTheme.dialogBackground,
       appBarTheme: AppBarTheme(
         backgroundColor: lightTheme.backgroundColor,
         foregroundColor: lightTheme.textColor,
@@ -73,9 +86,10 @@ class WordleColors {
 
   static ThemeData getDarkTheme() {
     return ThemeData(
-      primarySwatch: Colors.grey,
+      primarySwatch: Colors.brown,
       brightness: Brightness.dark,
       scaffoldBackgroundColor: darkTheme.backgroundColor,
+      dialogBackgroundColor: darkTheme.dialogBackground,
       appBarTheme: AppBarTheme(
         backgroundColor: darkTheme.backgroundColor,
         foregroundColor: darkTheme.textColor,
@@ -106,6 +120,11 @@ class _WordleThemeColors {
   final Color errorBackground;
   final Color errorText;
 
+  final Color dialogBackground;
+  final Color dialogButton;
+  final Color dialogButtonText;
+  final Color overlayBackground;
+
   const _WordleThemeColors({
     required this.mainText,
     required this.secondaryText,
@@ -124,5 +143,9 @@ class _WordleThemeColors {
     required this.keyboardDefault,
     required this.errorBackground,
     required this.errorText,
+    required this.dialogBackground,
+    required this.dialogButton,
+    required this.dialogButtonText,
+    required this.overlayBackground,
   });
 }

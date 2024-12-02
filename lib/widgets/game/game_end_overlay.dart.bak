@@ -97,7 +97,7 @@ class _GameEndOverlayState extends State<GameEndOverlay> with SingleTickerProvid
                       child: Container(
                         constraints: const BoxConstraints(maxWidth: 400),
                         decoration: BoxDecoration(
-                        color: colors.dialogBackground,  // Use our themed dialog background
+                          color: isDark ? colors.emptyTile : Colors.white,
                           borderRadius: BorderRadius.circular(24),
                           boxShadow: [
                             BoxShadow(
