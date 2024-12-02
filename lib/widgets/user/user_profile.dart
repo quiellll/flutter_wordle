@@ -229,12 +229,23 @@ class _UserProfileState extends State<UserProfile> {
             const SizedBox(height: 32),
             
             Center(
-              child: TextButton(
+              child: ElevatedButton(
                 onPressed: _resetAllData,
-                style: TextButton.styleFrom(
-                  foregroundColor: WordleColors.important,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: WordleColors.important,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
-                child: const Text('Restablecer tus datos'),
+                child: const Text(
+                  'Restablecer tus datos',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ),
           ],

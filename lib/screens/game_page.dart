@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_wordle/widgets/game/tutorial_panel.dart';
 import 'package:flutter_wordle/widgets/theme/theme_colors.dart';
 import '../models/models.dart';
 import '../services/validation_provider.dart';
@@ -107,6 +108,14 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
             title: const Text('Wordle'),
             centerTitle: true,
             actions: [
+              IconButton(
+                icon: const Icon(Icons.help_outline),
+                onPressed: () => showDialog(
+                  context: context,
+                  barrierColor: Colors.transparent,  // Important to match your overlay style
+                  builder: (context) => const TutorialDialog(),
+                ),
+              ),
               const ThemeToggle(),
               IconButton(
                 icon: const Icon(Icons.refresh),
