@@ -45,7 +45,7 @@ class GameKeyboard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   if (row == layout.last) 
-                    _buildSpecialKey('ENTER', onEnter, isDarkMode),
+                    _buildSpecialKey('➔', onEnter, isDarkMode),
                   ...row.map((letter) => _buildKey(letter, isDarkMode)),
                   if (row == layout.last)
                     _buildSpecialKey('⌫', onBackspace, isDarkMode),

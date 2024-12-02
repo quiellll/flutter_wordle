@@ -116,7 +116,7 @@ class _GameEndOverlayState extends State<GameEndOverlay> with SingleTickerProvid
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(
-                                widget.won ? '¡Felicitaciones!' : _getLoseMessage(),
+                                widget.won ? '¡Felicidades!' : _getLoseMessage(),
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontSize: 28,
@@ -128,7 +128,7 @@ class _GameEndOverlayState extends State<GameEndOverlay> with SingleTickerProvid
                               const SizedBox(height: 12),
                               if (widget.won)
                                 Text(
-                                  'Adivinaste la palabra en ${widget.attempts} ${widget.attempts == 1 ? 'intento' : 'intentos'}',
+                                  'Has adivinado la palabra en ${widget.attempts} ${widget.attempts == 1 ? 'intento' : 'intentos'}',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     fontSize: 16,
@@ -175,7 +175,7 @@ class _GameEndOverlayState extends State<GameEndOverlay> with SingleTickerProvid
                                         ),
                                       ),
                                       child: const Text(
-                                        'Jugar de Nuevo',
+                                        'Jugar de nuevo',
                                         style: TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.bold,
@@ -199,7 +199,7 @@ class _GameEndOverlayState extends State<GameEndOverlay> with SingleTickerProvid
                                         ),
                                       ),
                                       child: const Text(
-                                        'Volver al Menú Principal',
+                                        'Volver al menú principal',
                                         style: TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.bold,
