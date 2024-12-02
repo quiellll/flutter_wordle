@@ -95,17 +95,8 @@ flutter:
 
 flutter_icons:
   android: true
-  ios: true
-  image_path: "assets/icon/icon.png"
-  image_path_ios: "assets/icon/icon.png"
+  image_path: "assets/icon.png"
   
   # Android specific
   adaptive_icon_background: "#EDDFCC"
-  adaptive_icon_foreground: "assets/icon/W.png"
-  
-  # iOS specific
-  remove_alpha_ios: true  
-  ios_content_mode: scaleAspectFit  
-  
-  # Optional: Dark mode icon (iOS 13+)
-  image_path_ios_dark: "assets/icon/icon_dark.png"
+  adaptive_icon_foreground: "assets/W.png"
