@@ -38,7 +38,7 @@ class _WordleAppState extends State<WordleApp> {
   void initState() {
     super.initState();
     themeProvider = ThemeProvider(widget.prefs);
-    userStats = UserStats(username: 'Player');
+    userStats = UserStats(username: 'Jugador');
     _loadSettings();
   }
 
@@ -53,13 +53,13 @@ class _WordleAppState extends State<WordleApp> {
           );
           userStats = UserStats.fromJson(statsMap);
         } catch (e) {
-          userStats = UserStats(username: 'Player');
+          userStats = UserStats(username: 'Jugador');
         }
       }
       
       setState(() {});
     } catch (e) {
-      userStats = UserStats(username: 'Player');
+      userStats = UserStats(username: 'Jugador');
       setState(() {});
     }
   }
