@@ -15,7 +15,6 @@ class UserStats {
     this.avgAttempts = 0,
   });
 
-  // Convert to/from JSON for storage
   Map<String, dynamic> toJson() => {
     'username': username,
     'gamesPlayed': gamesPlayed,
@@ -24,14 +23,13 @@ class UserStats {
   };
 
   factory UserStats.fromJson(Map<String, dynamic> json) => UserStats(
-    username: json['username'] as String? ?? 'Player',
+    username: json['username'] as String? ?? 'Jugador',
     gamesPlayed: json['gamesPlayed'] as int? ?? 0,
     gamesWon: json['gamesWon'] as int? ?? 0,
     avgAttempts: (json['avgAttempts'] as num?)?.toDouble() ?? 0.0,
   );
 }
 
-// User profile dialog
 class UserProfile extends StatefulWidget {
   final UserStats initialStats;
   final Function(UserStats) onStatsUpdated;
@@ -123,7 +121,7 @@ class _UserProfileState extends State<UserProfile> {
         : WordleColors.lightTheme;
 
     return Dialog(
-      backgroundColor: colors.backgroundColor,  // Set the dialog background color to match theme
+      backgroundColor: colors.backgroundColor,
       child: Container(
         width: double.infinity,
         constraints: const BoxConstraints(maxWidth: 400),
@@ -151,7 +149,6 @@ class _UserProfileState extends State<UserProfile> {
             ),
             const SizedBox(height: 24),
             
-            // Username section
             Text(
               'Nombre de usuario',
               style: TextStyle(
@@ -166,12 +163,29 @@ class _UserProfileState extends State<UserProfile> {
                   child: TextField(
                     controller: _usernameController,
                     enabled: _isEditing,
-                    style: TextStyle(color: colors.textColor),
+                    style: TextStyle(
+                      color: _isEditing ? colors.textColor : colors.secondaryText,
+                    ),
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide(
+                          color: _isEditing ? colors.borderColor : colors.secondaryText,
+                        ),
                       ),
-                      fillColor: colors.cardBackground,
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide(
+                          color: colors.borderColor,
+                        ),
+                      ),
+                      disabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide(
+                          color: colors.secondaryText.withOpacity(0.5),
+                        ),
+                      ),
+                      fillColor: _isEditing ? colors.cardBackground : colors.cardBackground.withOpacity(0.5),
                       filled: true,
                     ),
                   ),
@@ -195,7 +209,6 @@ class _UserProfileState extends State<UserProfile> {
 
             const SizedBox(height: 24),
             
-            // Stats section
             Text(
               'Estadísticas',
               style: TextStyle(
@@ -215,7 +228,6 @@ class _UserProfileState extends State<UserProfile> {
 
             const SizedBox(height: 32),
             
-            // Reset button
             Center(
               child: TextButton(
                 onPressed: _resetAllData,
