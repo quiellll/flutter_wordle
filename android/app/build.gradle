@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.quiellll.wordle"
+    namespace = "com.example.flutter_wordle"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
