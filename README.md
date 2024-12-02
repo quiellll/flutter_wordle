@@ -1,16 +1,18 @@
-# flutter_wordle
+# Flutter Wordle Clone
 
-A new Flutter project.
+A feature-rich Wordle clone built with Flutter, offering an enhanced gaming experience with multiple languages and unlimited play sessions. This mobile application includes both English and Spanish word databases, smooth animations, local data persistence, and a modern Material Design interface.
 
-## Getting Started
+🎮 Key Features:
+- Multi-language support (English/Spanish)
+- Unlimited gaming sessions
+- Extensive word database
+- Fluid animations and transitions
+- Local progress saving
+- Modern, responsive UI
+- Available on Android
 
-This project is a starting point for a Flutter application.
+ℹ️ Coming Soon:
+- Web version in development - play in your browser!
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Tags
+`flutter` `dart` `wordle` `android` `game` `word-game` `material-design` `multilingual` `mobile-app`
