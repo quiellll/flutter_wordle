@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter_wordle/widgets/game/tutorial_panel.dart';
 import 'package:flutter_wordle/widgets/theme/theme_colors.dart';
 import '../models/models.dart';
@@ -25,11 +26,17 @@ class GamePage extends StatefulWidget {
 
 class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
   late ValidationProvider provider;
+
+  // Animation controllers
   late AnimationController _confettiController;
   late AnimationController _messageController;
   late Animation<double> _messageSlide;
   late Animation<double> _messageFade;
   late Animation<double> _messageRotate;
+
+  // AudioPlayer instances
+  final AudioPlayer _winPlayer = AudioPlayer();
+  final AudioPlayer _losePlayer = AudioPlayer();
   
   String _currentMessage = '';
   bool _isMessageVisible = false;
@@ -39,6 +46,8 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     provider = ValidationProvider(language: widget.language);
+
+    _initializeAudio();
 
     _confettiController = AnimationController(
       vsync: this,
@@ -81,6 +90,19 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
     provider.addListener(_handleValidationMessage);
   }
 
+  Future<void> _initializeAudio() async {
+    try {
+      // Set audio source assets
+      await _winPlayer.setSource(AssetSource('yay.mp3'));
+      await _losePlayer.setSource(AssetSource('fiasco.mp3'));
+      
+      await _winPlayer.setVolume(0.3);
+      await _losePlayer.setVolume(0.3);
+    } catch (e) {
+      debugPrint('Error initializing audio: $e');
+    }
+}
+
   void _handleAnimationStatus(AnimationStatus status) {
     if (status == AnimationStatus.dismissed) {
       setState(() {
@@ -96,6 +118,8 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
     _messageController.removeStatusListener(_handleAnimationStatus);
     _messageController.dispose();
     provider.removeListener(_handleValidationMessage);
+    _winPlayer.dispose();
+    _losePlayer.dispose();
     super.dispose();
   }
 
@@ -105,7 +129,7 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
       children: [
         Scaffold(
           appBar: AppBar(
-            title: const Text('Wordle'),
+            title: const Text('WORDLE'),
             centerTitle: true,
             actions: [
               IconButton(
@@ -231,10 +255,12 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
     case ValidationResult.win:
       // Update stats immediately
       widget.onGameComplete?.call(true, provider.attempts.length);
-      
+    
       // Then handle animations
       Future.delayed(const Duration(milliseconds: 1200), () {
         _confettiController.forward();
+        // Play sound with animation
+        _winPlayer.resume();
       });
       _showGameEndOverlay(true);
       break;
@@ -242,6 +268,13 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
     case ValidationResult.end:
       // Update stats immediately
       widget.onGameComplete?.call(false, provider.attempts.length);
+
+      // Play lose sound after a delay to match animations
+      Future.delayed(const Duration(milliseconds: 1200), () {
+        _losePlayer.resume();
+      });
+
+      // Finally show the overlay
       _showGameEndOverlay(false);
       break;
       

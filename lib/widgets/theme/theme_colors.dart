@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 class WordleColors {
   // Language selection buttons
   static const Color spanishButton = Color(0xFF2C6E49);  // Emerald green
-  static const Color englishButton = Color(0xFF4C956C);  // Sage green
-  static const Color important = Color(0xFFD32F2F);    // Warm red
+  static const Color englishButton = Color(0xFF2C6E49);  // Emerald green
+  static const Color important = Color(0xFFBF2C2C);    // Rich crimson
 
   // Light theme colors
   static final lightTheme = _WordleThemeColors(
@@ -18,9 +18,9 @@ class WordleColors {
     statBoxBackground: const Color(0xFFE6D5BC),  // Slightly darker cream
 
     // Game colors
-    correctTile: Colors.green,  // Maintained as requested
-    wrongPositionTile: Colors.orange,  // Maintained as requested
-    tileText: Colors.white,
+    correctTile: Color(0xFF2C6E49),  // Emerald green
+    wrongPositionTile: Color(0xFFE5A343),  // Amber orange
+    tileText: Color(0xFFF5E6D3),  // Warm cream
     emptyTile: const Color(0xFFF5E6D3),  // Matching cream background
     wrongTile: const Color(0xFF8B7355),  // Distinct leather brown for wrong tiles
     borderColor: const Color(0xFF7A6A5B),  // Medium brown
@@ -28,8 +28,8 @@ class WordleColors {
     keyboardDefault: const Color(0xFFD4C3AE),  // Light leather tone
     
     // Message colors
-    errorBackground: const Color(0xFFFFE5E5),
-    errorText: const Color(0xFF8B4513),
+    errorBackground: const Color(0xFFBF2C2C),  // Your rich crimson
+    errorText: const Color(0xFFFBEBEB),        // Very light pink-red
 
     // Dialog colors
     dialogBackground: const Color(0xFFF5E6D3),  // Warm cream
@@ -50,9 +50,9 @@ class WordleColors {
     statBoxBackground: const Color(0xFF4A3728),  // Medium-dark brown
 
     // Game colors
-    correctTile: Colors.green,  // Maintained as requested
-    wrongPositionTile: Colors.orange,  // Maintained as requested
-    tileText: Colors.white,
+    correctTile: Color(0xFF2C6E49),  // Emerald green
+    wrongPositionTile: Color(0xFFE5A343),  // Amber orange
+    tileText: Color(0xFFF5E6D3),  // Warm cream
     emptyTile: const Color(0xFF3C2A1E),  // Matching card background
     wrongTile: const Color(0xFF725544),  // Distinct darker leather for wrong tiles
     borderColor: const Color(0xFF8B7355),  // Medium leather
@@ -60,8 +60,8 @@ class WordleColors {
     keyboardDefault: const Color(0xFF4A3728),  // Rich brown
     
     // Message colors
-    errorBackground: const Color(0xFF4A2520),
-    errorText: const Color(0xFFFFCCCC),
+    errorBackground: const Color(0xFF8B2525),  // Darker version of crimson
+    errorText: const Color(0xFFFBEBEB),        // Light pink-red
 
     // Dialog colors
     dialogBackground: const Color(0xFF3C2A1E),  // Rich leather brown
