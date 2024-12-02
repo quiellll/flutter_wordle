@@ -217,27 +217,31 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
   }
 
   void _handleSubmit() {
-    final result = provider.submitAttempt();
-    switch (result) {
-      case ValidationResult.win:
-        Future.delayed(const Duration(milliseconds: 1200), () {
-          _confettiController.forward().then((_) {
-            widget.onGameComplete?.call(true, provider.attempts.length);
-          });
-        });
-        _showGameEndOverlay(true);
-        break;
-      case ValidationResult.end:
-        widget.onGameComplete?.call(false, provider.attempts.length);
-        _showGameEndOverlay(false);
-        break;
-      case ValidationResult.continue_:
-        break;
-      case ValidationResult.invalid:
-      case ValidationResult.notInWordList:
-        break;
-    }
+  final result = provider.submitAttempt();
+  switch (result) {
+    case ValidationResult.win:
+      // Update stats immediately
+      widget.onGameComplete?.call(true, provider.attempts.length);
+      
+      // Then handle animations
+      Future.delayed(const Duration(milliseconds: 1200), () {
+        _confettiController.forward();
+      });
+      _showGameEndOverlay(true);
+      break;
+      
+    case ValidationResult.end:
+      // Update stats immediately
+      widget.onGameComplete?.call(false, provider.attempts.length);
+      _showGameEndOverlay(false);
+      break;
+      
+    case ValidationResult.continue_:
+    case ValidationResult.invalid:
+    case ValidationResult.notInWordList:
+      break;
   }
+}
 
   void _handleRestart() {
     setState(() {
