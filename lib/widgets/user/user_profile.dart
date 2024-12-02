@@ -68,26 +68,26 @@ class _UserProfileState extends State<UserProfile> {
     return showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Reset All Data?'),
+        title: const Text('¿Quieres restablecer tus datos?'),
         content: const Text(
-          'This will reset your username and all game statistics. This action cannot be undone.',
+          'Esto eliminará tu usuario y tus estadísticas. Esta acción no es reversible.',
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: const Text('Cancelar'),
           ),
           TextButton(
             onPressed: () {
               setState(() {
-                currentStats = UserStats(username: 'Player');
-                _usernameController.text = 'Player';
+                currentStats = UserStats(username: 'Jugador');
+                _usernameController.text = 'Jugador';
               });
               widget.onStatsUpdated(currentStats);
               Navigator.pop(context);
             },
             child: const Text(
-              'Reset',
+              'Restablecer',
               style: TextStyle(color: WordleColors.important),
             ),
           ),
@@ -99,7 +99,7 @@ class _UserProfileState extends State<UserProfile> {
   void _saveChanges() {
     if (_usernameController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Username cannot be empty')),
+        const SnackBar(content: Text('El nombre de usuario no puede estar vacío.')),
       );
       return;
     }
@@ -135,7 +135,7 @@ class _UserProfileState extends State<UserProfile> {
             Row(
               children: [
                 Text(
-                  'Profile',
+                  'Perfil',
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
@@ -153,7 +153,7 @@ class _UserProfileState extends State<UserProfile> {
             
             // Username section
             Text(
-              'Username',
+              'Nombre de usuario',
               style: TextStyle(
                 fontSize: 16,
                 color: colors.secondaryText,
@@ -197,7 +197,7 @@ class _UserProfileState extends State<UserProfile> {
             
             // Stats section
             Text(
-              'Statistics',
+              'Estadísticas',
               style: TextStyle(
                 fontSize: 16,
                 color: colors.secondaryText,
@@ -207,9 +207,9 @@ class _UserProfileState extends State<UserProfile> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _buildStatBox('Games\nPlayed', currentStats.gamesPlayed.toString()),
-                _buildStatBox('Games\nWon', currentStats.gamesWon.toString()),
-                _buildStatBox('Avg.\nAttempts', currentStats.avgAttempts.toStringAsFixed(1)),
+                _buildStatBox('Partidas\njugadas', currentStats.gamesPlayed.toString()),
+                _buildStatBox('Partidas\nganadas', currentStats.gamesWon.toString()),
+                _buildStatBox('Media de\nintentos', currentStats.avgAttempts.toStringAsFixed(1)),
               ],
             ),
 
@@ -222,7 +222,7 @@ class _UserProfileState extends State<UserProfile> {
                 style: TextButton.styleFrom(
                   foregroundColor: WordleColors.important,
                 ),
-                child: const Text('Reset All Data'),
+                child: const Text('Restablecer tus datos'),
               ),
             ),
           ],

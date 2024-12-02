@@ -175,7 +175,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                           child: FadeTransition(
                             opacity: _fadeWelcome,
                             child: Text(
-                              'Welcome,',
+                              'Hola,',
                               style: TextStyle(
                                 fontSize: 28,
                                 fontWeight: FontWeight.w300,
@@ -201,7 +201,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                         FadeTransition(
                           opacity: _fadeWelcome,
                           child: Text(
-                            'Guess the word within 6 attempts',
+                            'Tienes 6 intentos para adivinar la palabra',
                             style: TextStyle(
                               fontSize: 16,
                               color: colors.secondaryText,
@@ -230,7 +230,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                             child: Row(
                               children: [
                                 _buildStatItem(
-                                  'Played',
+                                  'Jugadas',
                                   widget.userStats.gamesPlayed.toString(),
                                   textColor: colors.textColor,
                                   secondaryTextColor: colors.secondaryText,
@@ -241,7 +241,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                                   color: colors.dividerColor,
                                 ),
                                 _buildStatItem(
-                                  'Won',
+                                  'Ganadas',
                                   widget.userStats.gamesWon.toString(),
                                   textColor: colors.textColor,
                                   secondaryTextColor: colors.secondaryText,
@@ -252,7 +252,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                                   color: colors.dividerColor,
                                 ),
                                 _buildStatItem(
-                                  'Avg. Attempts',
+                                  'Tu media',
                                   widget.userStats.avgAttempts.toStringAsFixed(1),
                                   textColor: colors.textColor,
                                   secondaryTextColor: colors.secondaryText,
@@ -271,7 +271,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                               Expanded(
                                 child: _buildLanguageButton(
                                   context,
-                                  'English',
+                                  'Inglés',
                                   WordleColors.englishButton,
                                   () => _startGame(context, Language.english),
                                 ),
