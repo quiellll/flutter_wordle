@@ -123,30 +123,30 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
 
   @override
   Widget build(BuildContext context) {
-    final brightness = Theme.of(context).brightness;
-    final bgColor = brightness == Brightness.light 
-        ? Colors.grey.shade100 
-        : const Color(0xFF1A1A1A);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colors = isDark ? WordleColors.darkTheme : WordleColors.lightTheme;
 
     return Scaffold(
-      backgroundColor: bgColor,
+      backgroundColor: colors.backgroundColor,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Title section (unchanged)
               FadeTransition(
                 opacity: _fadeTitle,
                 child: Container(
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   child: Row(
                     children: [
-                      const Text(
+                      Text(
                         'WORDLE',
                         style: TextStyle(
                           fontSize: 32,
                           fontWeight: FontWeight.bold,
+                          color: colors.textColor,
                           letterSpacing: 2,
                         ),
                       ),
@@ -161,6 +161,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                 ),
               ),
               
+              // Main content (keep everything the same until after stats container)
               Expanded(
                 child: Center(
                   child: SingleChildScrollView(
@@ -168,6 +169,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        // Welcome text transitions (unchanged)
                         SlideTransition(
                           position: _slideWelcome,
                           child: FadeTransition(
@@ -177,7 +179,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                               style: TextStyle(
                                 fontSize: 28,
                                 fontWeight: FontWeight.w300,
-                                color: Colors.grey.shade500,
+                                color: colors.secondaryText,
                               ),
                             ),
                           ),
@@ -188,44 +190,38 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                             opacity: _fadeWelcome,
                             child: Text(
                               widget.userStats.username,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 40,
                                 fontWeight: FontWeight.bold,
+                                color: colors.textColor,
                               ),
                             ),
                           ),
                         ),
                         FadeTransition(
                           opacity: _fadeWelcome,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SizedBox(height: 8),
-                              Text(
-                                'Guess the word within 6 attempts',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.grey.shade500,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
+                          child: Text(
+                            'Guess the word within 6 attempts',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: colors.secondaryText,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         ),
 
                         const SizedBox(height: 40),
+                        // Stats container (unchanged)
                         FadeTransition(
                           opacity: _fadeStats,
                           child: Container(
                             padding: const EdgeInsets.symmetric(vertical: 28, horizontal: 20),
                             decoration: BoxDecoration(
-                              color: brightness == Brightness.light
-                                  ? Colors.white
-                                  : const Color(0xFF2C2C2C),
+                              color: colors.cardBackground,
                               borderRadius: BorderRadius.circular(24),
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.black.withOpacity(0.08),
+                                  color: colors.shadowColor,
                                   blurRadius: 20,
                                   offset: const Offset(0, 8),
                                 ),
@@ -233,24 +229,40 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                             ),
                             child: Row(
                               children: [
-                                _buildStatItem('Played', widget.userStats.gamesPlayed.toString()),
+                                _buildStatItem(
+                                  'Played',
+                                  widget.userStats.gamesPlayed.toString(),
+                                  textColor: colors.textColor,
+                                  secondaryTextColor: colors.secondaryText,
+                                ),
                                 Container(
                                   width: 1,
                                   height: 40,
-                                  color: Colors.grey.withOpacity(0.2),
+                                  color: colors.dividerColor,
                                 ),
-                                _buildStatItem('Won', widget.userStats.gamesWon.toString()),
+                                _buildStatItem(
+                                  'Won',
+                                  widget.userStats.gamesWon.toString(),
+                                  textColor: colors.textColor,
+                                  secondaryTextColor: colors.secondaryText,
+                                ),
                                 Container(
                                   width: 1,
                                   height: 40,
-                                  color: Colors.grey.withOpacity(0.2),
+                                  color: colors.dividerColor,
                                 ),
-                                _buildStatItem('Avg. Attempts', widget.userStats.avgAttempts.toStringAsFixed(1)),
+                                _buildStatItem(
+                                  'Avg. Attempts',
+                                  widget.userStats.avgAttempts.toStringAsFixed(1),
+                                  textColor: colors.textColor,
+                                  secondaryTextColor: colors.secondaryText,
+                                ),
                               ],
                             ),
                           ),
                         ),
 
+                        // Add language buttons back
                         const SizedBox(height: 48),
                         FadeTransition(
                           opacity: _fadeButtons,
@@ -289,16 +301,21 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     );
   }
 
-  Widget _buildStatItem(String label, String value) {
+
+  Widget _buildStatItem(String label, String value, {
+    required Color textColor,
+    required Color secondaryTextColor,
+  }) {
     return Expanded(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
             value,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 32,
               fontWeight: FontWeight.bold,
+              color: textColor,
             ),
           ),
           const SizedBox(height: 4),
@@ -306,7 +323,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
             label,
             style: TextStyle(
               fontSize: 14,
-              color: Colors.grey.shade500,
+              color: secondaryTextColor,
               fontWeight: FontWeight.w500,
             ),
           ),

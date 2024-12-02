@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_wordle/widgets/theme/theme_colors.dart';
 import '../models/models.dart';
 import '../services/validation_provider.dart';
 import '../widgets/game/game_board.dart';
@@ -120,6 +121,9 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
                 child: AnimatedBuilder(
                   animation: _messageController,
                   builder: (context, child) {
+                    final colors = Theme.of(context).brightness == Brightness.dark
+                        ? WordleColors.darkTheme
+                        : WordleColors.lightTheme;
                     return ClipRect(
                       child: Transform(
                         transform: Matrix4.identity()
@@ -134,12 +138,12 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
                                   width: double.infinity,
                                   height: 50,
                                   padding: const EdgeInsets.all(8.0),
-                                  color: Colors.red.shade100,
+                                  color: colors.errorBackground,
                                   alignment: Alignment.center,
                                   child: Text(
                                     _currentMessage,
                                     style: TextStyle(
-                                      color: Colors.red.shade800,
+                                      color: colors.errorText,
                                       fontWeight: FontWeight.bold,
                                     ),
                                     textAlign: TextAlign.center,

@@ -118,9 +118,12 @@ class _UserProfileState extends State<UserProfile> {
 
   @override
   Widget build(BuildContext context) {
-    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final colors = Theme.of(context).brightness == Brightness.dark
+        ? WordleColors.darkTheme
+        : WordleColors.lightTheme;
 
     return Dialog(
+      backgroundColor: colors.backgroundColor,  // Set the dialog background color to match theme
       child: Container(
         width: double.infinity,
         constraints: const BoxConstraints(maxWidth: 400),
@@ -131,16 +134,17 @@ class _UserProfileState extends State<UserProfile> {
           children: [
             Row(
               children: [
-                const Text(
+                Text(
                   'Profile',
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
+                    color: colors.textColor,
                   ),
                 ),
                 const Spacer(),
                 IconButton(
-                  icon: const Icon(Icons.close),
+                  icon: Icon(Icons.close, color: colors.textColor),
                   onPressed: () => Navigator.pop(context),
                 ),
               ],
@@ -152,7 +156,7 @@ class _UserProfileState extends State<UserProfile> {
               'Username',
               style: TextStyle(
                 fontSize: 16,
-                color: isDarkMode ? Colors.grey[300] : Colors.grey[700],
+                color: colors.secondaryText,
               ),
             ),
             const SizedBox(height: 8),
@@ -162,16 +166,22 @@ class _UserProfileState extends State<UserProfile> {
                   child: TextField(
                     controller: _usernameController,
                     enabled: _isEditing,
+                    style: TextStyle(color: colors.textColor),
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
+                      fillColor: colors.cardBackground,
+                      filled: true,
                     ),
                   ),
                 ),
                 const SizedBox(width: 8),
                 IconButton(
-                  icon: Icon(_isEditing ? Icons.save : Icons.edit),
+                  icon: Icon(
+                    _isEditing ? Icons.save : Icons.edit,
+                    color: colors.textColor,
+                  ),
                   onPressed: () {
                     if (_isEditing) {
                       _saveChanges();
@@ -190,7 +200,7 @@ class _UserProfileState extends State<UserProfile> {
               'Statistics',
               style: TextStyle(
                 fontSize: 16,
-                color: isDarkMode ? Colors.grey[300] : Colors.grey[700],
+                color: colors.secondaryText,
               ),
             ),
             const SizedBox(height: 16),
@@ -210,7 +220,7 @@ class _UserProfileState extends State<UserProfile> {
               child: TextButton(
                 onPressed: _resetAllData,
                 style: TextButton.styleFrom(
-                  foregroundColor: Colors.red,
+                  foregroundColor: WordleColors.important,
                 ),
                 child: const Text('Reset All Data'),
               ),
@@ -222,31 +232,41 @@ class _UserProfileState extends State<UserProfile> {
   }
 
   Widget _buildStatBox(String label, String value) {
+    final colors = Theme.of(context).brightness == Brightness.dark
+        ? WordleColors.darkTheme
+        : WordleColors.lightTheme;
+
     return Container(
       width: 90,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Theme.of(context).brightness == Brightness.light
-            ? Colors.grey[200]
-            : Colors.grey[800],
+        color: colors.cardBackground,
         borderRadius: BorderRadius.circular(8),
+        boxShadow: [
+          BoxShadow(
+            color: colors.shadowColor,
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: Column(
         children: [
           Text(
             value,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
+              color: colors.textColor,
             ),
           ),
           const SizedBox(height: 4),
           Text(
             label,
             textAlign: TextAlign.center,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 12,
-              color: Colors.grey,
+              color: colors.secondaryText,
             ),
           ),
         ],
