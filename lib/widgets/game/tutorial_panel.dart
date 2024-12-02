@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_wordle/models/models.dart';
-import 'package:flutter_wordle/widgets/game/game_tile.dart';
 import 'package:flutter_wordle/widgets/theme/theme_colors.dart';
-import 'package:flutter_wordle/widgets/theme/theme_provider.dart';
-import 'package:provider/provider.dart';
 
 class TutorialDialog extends StatefulWidget {
   const TutorialDialog({super.key});
